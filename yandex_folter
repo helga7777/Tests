@@ -1,0 +1,72 @@
+import requests
+import yadisk
+import unittest
+from parameterized import parameterized
+
+
+class YaUploader:
+    def __init__(self, token: str):
+        self.token = token
+
+    def create_folder(path):
+        """Создание папки."""
+        try:
+            URL = 'https://cloud-api.yandex.net/v1/disk/resources'
+            response2 = requests.get(f'{URL}?path={path}', headers={'Authorization': 'OAuth ' + token_ya}).json()
+            'test5' in response2['_embedded']['items'][0]['path']
+        except:
+            return requests.put(f'{URL}?path={path}', headers={'Authorization': 'OAuth ' + token_ya}).status_code
+
+
+
+    # def create_folder2(path):
+    #     """Проверка создания папки."""
+    # 
+    #     URL = 'https://cloud-api.yandex.net/v1/disk/resources'
+    #     response = requests.put(f'{URL}?path={path}', headers={'Authorization': 'OAuth ' + token_ya})
+    #     status = response.status_code
+    #     y = yadisk.YaDisk(token=token_ya)
+    #     a = []
+    #     for item in y.listdir('/test5'):
+    #         a.append(item['name'])
+    #     if 'test7' in a:
+    #         print('yes')
+    #     if y.exists("/test5/test7") == False:
+    #         print('yes')
+    #     else:
+    #         print('no')
+
+
+
+
+
+class TestSomething(unittest.TestCase):
+    def setUp(self):
+        print('method setUp')
+
+    @parameterized.expand(
+        [
+            ('test5/test9', 409),
+            ('test5/test10', 201)
+        ])
+    def test_create_folder(self,list_text,result):
+        token_ya = ''
+        uploader = YaUploader(token='')
+        name_folder = 'test5/test9'
+        self.assertEqual(YaUploader.create_folder(list_text), result)
+
+    def test_create_folder_path(self):
+        token_ya = ''
+        y = yadisk.YaDisk(token=token_ya)
+        a = []
+        for item in y.listdir('/test5'):
+            a.append(item['name'])
+        self.assertIn('test9',a)
+
+if __name__ == '__main__':
+    token_ya = ''
+    uploader = YaUploader(token='')
+    name_folder = 'test5/test7'
+    YaUploader.create_folder(name_folder)
+    unittest.main()
+
